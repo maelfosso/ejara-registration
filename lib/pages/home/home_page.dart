@@ -1,6 +1,4 @@
-import 'package:ejara/bloc/authentication/authentication_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,7 +21,7 @@ class HomePage extends StatelessWidget {
           IconButton(
             key: const Key('homePage_logout_iconButton'),
             icon: const Icon(Icons.exit_to_app),
-            onPressed: () => context.read<AuthenticationBloc>().add(AuthenticationLogoutRequested()),
+            onPressed: () {},
           )
         ],
       ),

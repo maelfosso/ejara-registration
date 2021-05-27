@@ -52,32 +52,25 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   void countryChanged(CountryCode countryCode) {
-    print("COUNTRY CAHNANGED ${countryCode.code} - ${countryCode.dialCode} - ${countryCode.flagUri} - ${countryCode.name}");
-    print(Country.fromCountryCode(countryCode));
     emit(state.copyWith(
       country: Country.fromCountryCode(countryCode))
     );
   }
 
   Future<void> registerFormSubmitted() async {
-    print('RegisterSubmitted : ${state.username.value} - ${state.phoneNumber.value}');
-    print('RegisterFormStatus : ${state.status.isValid}');
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      final response = await _authenticationRepository.register(
+      await _authenticationRepository.register(
         username: state.username.value,
         email: state.email.value,
         phoneNumber: state.phoneNumber.value,
         country: state.country.code!,
       );
-      print('Response -- $response');
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      emit(state.copyWith(status: FormzStatus.submissionSuccess, errorReason: ''));
     } on Exception catch (e) {
-      print('RegisterFormSubmitted : throw exception \n $e');
       String reason = '';
       if (e is RegisterFailure) {
-        print("CUSTGOMER MESSAGE : ${e.reason}");
         reason = e.reason;
       }
       emit(state.copyWith(

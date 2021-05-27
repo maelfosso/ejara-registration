@@ -102,7 +102,6 @@ class _FormError extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: Colors.red,
-                
                 borderRadius: BorderRadius.all(Radius.circular(40.0))
               ),
               child: Center(
@@ -177,9 +176,8 @@ class _PhoneNumberInput extends StatelessWidget {
     return BlocBuilder<RegisterCubit, RegisterState>(
       // buildWhen: (previous, current) => previous.phoneNumber != current.phoneNumber,
       builder: (context, state) {
-        print("INIT STATE $state");
         return Container(
-          margin: EdgeInsets.symmetric(vertical: 5.0),
+          padding: EdgeInsets.symmetric(vertical: 5.0),
           child: IntrinsicHeight(child: Row(
             children: [
               Container(
@@ -207,7 +205,7 @@ class _PhoneNumberInput extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         margin: EdgeInsets.only(right: 5.0, bottom: 12.0),
@@ -238,24 +236,6 @@ class _PhoneNumberInput extends StatelessWidget {
                   )
                 ),
               )
-              // Expanded(
-              //   flex: 2,
-              //   child: Container(
-              //     child: TextField(
-              //       keyboardType: TextInputType.phone,
-              //       onChanged: (phoneNumber) => context.read<RegisterCubit>().phoneNumberChanged(phoneNumber),
-              //       decoration: InputDecoration(
-              //         labelText: "Phone number",
-              //         prefixText: "${state.country.name}",
-              //         border: InputBorder.none,
-              //         focusedBorder: InputBorder.none,
-              //         enabledBorder: InputBorder.none,
-              //         errorBorder: InputBorder.none,
-              //         disabledBorder: InputBorder.none,
-              //       ),
-              //     )
-              //   )
-              // )
             ]
           ),
           )

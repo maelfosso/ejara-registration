@@ -59,22 +59,13 @@ class AuthenticationRepository {
     RegisterResponse response;
     try {
       response = await _api.register(username, email, phoneNumber, country);
-      print('Response -- $response');
       
       return response;
-      // prefs.setString(userCacheKey, json.encode(response));
-      // _controller.add(AuthenticationStatus.authenticated);
-    } on Exception catch (e) {
-      print('API Sign up throw execption');
-      print(e);
-      
+    } on Exception catch (e) {      
       switch (e.runtimeType) {
         case DioError:
           // Here's the sample to get the failed response error code and message
           final res = (e as DioError).response;
-          print("Got error : ${res?.statusCode} -> ${res?.statusMessage}");
-          print(res?.data);
-          print(json.encode(res?.data));
           Map<String, dynamic> dataMsg = json.decode(json.encode(res?.data));
 
           throw new RegisterFailure(dataMsg["message"]!.toString(), res?.statusCode ?? 400);
