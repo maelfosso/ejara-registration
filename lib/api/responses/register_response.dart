@@ -6,13 +6,12 @@ class RegisterResponse extends Equatable {
 
   const RegisterResponse({
     this.responseCode = '',
-    this.message = '',
-    this.statusCode = 200
+    this.message = ''
   });
 
   final String responseCode;
   final String message;
-  final int statusCode;
+  // final int statusCode;
 
   @override
   List<Object?> get props => [responseCode, message];
@@ -21,7 +20,6 @@ class RegisterResponse extends Equatable {
     return RegisterResponse(
       responseCode: json['responsecode'],
       message: json['message'],
-      statusCode: json['statusCode']
     );
   }
   
@@ -29,7 +27,6 @@ class RegisterResponse extends Equatable {
     return {
       'responseCode': responseCode,
       'message': message,
-      'statusCode': statusCode
     };
   }
 }

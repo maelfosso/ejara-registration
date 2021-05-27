@@ -7,7 +7,7 @@ class PhoneNumber extends FormzInput<String, PhoneNumberValidationError> {
   const PhoneNumber.dirty([String value = '']) : super.dirty(value);
 
   static final _PhoneNumberRegExp = 
-    RegExp(r'^\+\d{1,}$');
+    RegExp(r'^\d{1,}$');
 
   @override
   PhoneNumberValidationError? validator(String? value) {
