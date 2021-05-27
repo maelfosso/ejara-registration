@@ -35,6 +35,13 @@ dependencies:
   retrofit: any
   logger: any  #for logging purpose
 
+dependency_overrides:
+  retrofit_generator:
+    git:
+      url: https://github.com/Chimerapps/retrofit.dart.git
+      ref: 9f90296751984b359937c38563da5b19db5550f5
+      path: generator
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

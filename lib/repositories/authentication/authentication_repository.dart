@@ -60,4 +60,14 @@ class AuthenticationRepository {
       throw RegisterFailure();
     }
   }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(userCacheKey);
+    _controller.add(AuthenticationStatus.unauthenticated);
+  }
+
+  void dispose() {
+    
+  }
 }

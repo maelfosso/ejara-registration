@@ -1,19 +1,19 @@
 import 'package:formz/formz.dart';
 
-enum PhoneValidationError { invalid }
+enum PhoneNumberValidationError { invalid }
 
-class Phone extends FormzInput<String, PhoneValidationError> {
-  const Phone.pure() : super.pure('');
-  const Phone.dirty([String value = '']) : super.dirty(value);
+class PhoneNumber extends FormzInput<String, PhoneNumberValidationError> {
+  const PhoneNumber.pure() : super.pure('');
+  const PhoneNumber.dirty([String value = '']) : super.dirty(value);
 
-  static final _phoneRegExp = 
+  static final _PhoneNumberRegExp = 
     RegExp(r'^\+\d{1,}$');
 
   @override
-  PhoneValidationError? validator(String? value) {
-    return _phoneRegExp.hasMatch(value ?? '')
+  PhoneNumberValidationError? validator(String? value) {
+    return _PhoneNumberRegExp.hasMatch(value ?? '')
       ? null 
-      : PhoneValidationError.invalid
+      : PhoneNumberValidationError.invalid
     ;
   }
 }

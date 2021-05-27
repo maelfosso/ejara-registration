@@ -7,10 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const RegisterPage());
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +15,7 @@ class RegisterPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0.0,
         title: Text(
-          "Sign Up (Client)",
+          "Register",
           style: TextStyle(
             color: Colors.black
           ),

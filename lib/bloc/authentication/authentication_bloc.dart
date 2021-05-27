@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:ejara/models/user.dart';
+import 'package:ejara/repositories/authentication/authentication_repository.dart';
 import 'package:equatable/equatable.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
-
-enum AuthenticationStatus { unknown, known, authenticated, unauthenticated }
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   
@@ -31,7 +31,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     if (event is AuthenticationStatusChanged) {
       yield await _mapAuthenticationStatusChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
-      _authenticationRepository.signOut();
+      _authenticationRepository.logout();
     }
   }
 
@@ -48,13 +48,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     switch (event.status) {
       case AuthenticationStatus.unauthenticated:
         return const AuthenticationState.unauthenticated();
-      case AuthenticationStatus.known:
-        final userCode = _authenticationRepository.currentKnowUser;
-
-        return AuthenticationState.known(userCode);
       case AuthenticationStatus.authenticated:
-        final user = _authenticationRepository.currentUser;
-        // await _tryGetUser();
+        final user = await _authenticationRepository.currentUser;
+
         return user != User.empty
             ? AuthenticationState.authenticated(user)
             : const AuthenticationState.unauthenticated();
@@ -62,14 +58,5 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         return const AuthenticationState.unknown();
     }
   }
-
-  Future<User?> _tryGetUser() async {
-    try {
-      // final user = await _userRepository.getUser();
-      // return user;
-      _authenticationRepository.user;
-    } on Exception {
-      return null;
-    }
-  }
+  
 }

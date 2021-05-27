@@ -58,6 +58,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         username: state.username.value,
         email: state.email.value,
         phoneNumber: state.phoneNumber.value,
+        country: ""
       );
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on Exception catch (e) {
