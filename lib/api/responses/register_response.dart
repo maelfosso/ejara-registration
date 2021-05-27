@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-// @JsonSerializable()
 class RegisterResponse extends Equatable {
 
   const RegisterResponse({
@@ -11,7 +9,6 @@ class RegisterResponse extends Equatable {
 
   final String responseCode;
   final String message;
-  // final int statusCode;
 
   @override
   List<Object?> get props => [responseCode, message];

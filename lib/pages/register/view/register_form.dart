@@ -92,34 +92,10 @@ class _UsernameInput extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Name",
-                textAlign: TextAlign.left,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               TextField(
                 onChanged: (username) => context.read<RegisterCubit>().usernameChanged(username),
                 decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFFF7F8F9),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 0.0
-                    )
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                      width: 1.0
-                    )
-                  ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
-                  isDense: true,
+                  labelText: "Username"
                 ),
               )
             ]
