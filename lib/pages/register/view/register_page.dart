@@ -11,15 +11,15 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        // centerTitle: true,
+        backgroundColor: Colors.blue[900],
         elevation: 0.0,
-        title: Text(
-          "Register",
-          style: TextStyle(
-            color: Colors.black
-          ),
-        ),
+        // title: Text(
+        //   "Register",
+        //   style: TextStyle(
+        //     color: Colors.black
+        //   ),
+        // ),
         
       ),
       body: SafeArea( 
