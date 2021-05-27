@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:andi_taxi/api/response/user-code.dart';
-import 'package:andi_taxi/models/models.dart';
-import 'package:andi_taxi/repository/authentication/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
+
+enum AuthenticationStatus { unknown, known, authenticated, unauthenticated }
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   

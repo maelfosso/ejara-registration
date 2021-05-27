@@ -1,16 +1,14 @@
-import 'package:andi_taxi/pages/sign_in/view/sign_in_page.dart';
-import 'package:andi_taxi/pages/sign_up_client/cubit/sign_up_client_cubit.dart';
-import 'package:flutter/gestures.dart';
+import 'package:ejara/pages/register/cubit/register_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-class SignUpClientForm extends StatelessWidget {
-  const SignUpClientForm({Key? key}) : super(key: key);
+class RegisterForm extends StatelessWidget {
+  const RegisterForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpClientCubit, SignUpClientState>(
+    return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context)
@@ -26,7 +24,6 @@ class SignUpClientForm extends StatelessWidget {
         child: Column(
           children: [
             _buildBody(),
-            _Footer()
           ],
         )
       )
@@ -41,10 +38,10 @@ class SignUpClientForm extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _NameInput(),
-            _PhoneInput(),
-            _SignUpButton()
-            
+            _UsernameInput(),
+            _EmailInput(),
+            _PhoneNumberInput(),
+            _RegisterButton()          
             
           ],
         ),
@@ -54,54 +51,11 @@ class SignUpClientForm extends StatelessWidget {
   
 }
 
-class _Footer extends StatelessWidget {
+class _UsernameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    TextStyle defaultStyle = TextStyle(
-      color: Color(0xFF97ADB6)
-    );
-    TextStyle linkStyle = TextStyle(
-      color: Color(0xFFC6902E),
-      decoration: TextDecoration.underline
-    );
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 25.0),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          children: <TextSpan>[
-            TextSpan(
-              text: 'Already have an account? ',
-              style: defaultStyle,
-            ),
-            TextSpan(
-              text: 'Sign In',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  print('Sign In Tap');
-                  Navigator
-                      .of(context)
-                      .pushAndRemoveUntil<void>(
-                        SignInPage.route(),
-                        // SignUpDriverPage.route(),
-                        (route) => false,
-                      );
-                }
-            ),
-          ],
-        )
-      ),
-    );
-  }
-}
-
-class _NameInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignUpClientCubit, SignUpClientState>(
-      buildWhen: (previous, current) => previous.name != current.name,
+    return BlocBuilder<RegisterCubit, RegisterState>(
+      buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
         return Container(
           margin: EdgeInsets.symmetric(vertical: 5.0),
@@ -116,7 +70,7 @@ class _NameInput extends StatelessWidget {
                 ),
               ),
               TextField(
-                onChanged: (name) => context.read<SignUpClientCubit>().nameChanged(name),
+                onChanged: (username) => context.read<RegisterCubit>().usernameChanged(username),
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Color(0xFFF7F8F9),
@@ -146,11 +100,60 @@ class _NameInput extends StatelessWidget {
   }
 }
 
-class _PhoneInput extends StatelessWidget {
+class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignUpClientCubit, SignUpClientState>(
-      buildWhen: (previous, current) => previous.phone != current.phone,
+    return BlocBuilder<RegisterCubit, RegisterState>(
+      buildWhen: (previous, current) => previous.username != current.username,
+      builder: (context, state) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Email",
+                textAlign: TextAlign.left,
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextField(
+                onChanged: (email) => context.read<RegisterCubit>().emailChanged(email),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xFFF7F8F9),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                      width: 0.0
+                    )
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                      width: 1.0
+                    )
+                  ),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
+                  isDense: true,
+                ),
+              )
+            ]
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _PhoneNumberInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegisterCubit, RegisterState>(
+      buildWhen: (previous, current) => previous.phoneNumber != current.phoneNumber,
       builder: (context, state) {
         return Container(
           margin: EdgeInsets.symmetric(vertical: 5.0),
@@ -159,7 +162,7 @@ class _PhoneInput extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Phone number",
+                "PhoneNumber number",
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.subtitle1?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -167,9 +170,9 @@ class _PhoneInput extends StatelessWidget {
               ),
               TextField(
                 keyboardType: TextInputType.phone,
-                onChanged: (phone) => context.read<SignUpClientCubit>().phoneChanged(phone),
+                onChanged: (phoneNumber) => context.read<RegisterCubit>().phoneNumberChanged(phoneNumber),
                 decoration: InputDecoration(
-                  errorText: state.phone.invalid ? 'invalid phone number' : null,
+                  errorText: state.phoneNumber.invalid ? 'invalid phoneNumber number' : null,
                   filled: true,
                   fillColor: Color(0xFFF7F8F9),
                   enabledBorder: OutlineInputBorder(
@@ -197,11 +200,11 @@ class _PhoneInput extends StatelessWidget {
   }
 }
 
-class _SignUpButton extends StatelessWidget {
+class _RegisterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignUpClientCubit, SignUpClientState>(
+    return BlocBuilder<RegisterCubit, RegisterState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
@@ -229,7 +232,7 @@ class _SignUpButton extends StatelessWidget {
                     )
                   ),
                   onPressed: state.status.isValidated
-                    ? () => context.read<SignUpClientCubit>().signUpFormSubmitted()
+                    ? () => context.read<RegisterCubit>().registerFormSubmitted()
                     : null,
                 ),
               )
