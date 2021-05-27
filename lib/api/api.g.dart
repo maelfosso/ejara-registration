@@ -16,7 +16,7 @@ class _RestClient implements RestClient {
   String? baseUrl;
 
   @override
-  Future<RegisterOKResponse> register(
+  Future<RegisterResponse> register(
       username, email, phoneNumber, country) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -27,13 +27,13 @@ class _RestClient implements RestClient {
       'country_code': country
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<RegisterOKResponse>(
+        _setStreamType<RegisterResponse>(
             Options(method: 'POST', headers: <String, dynamic>{}, extra: _extra)
                 .compose(
                     _dio.options, '/api/v1/auth/sign-up/check-signup-details',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = RegisterOKResponse.fromJson(_result.data!);
+    final value = RegisterResponse.fromJson(_result.data!);
     return value;
   }
 

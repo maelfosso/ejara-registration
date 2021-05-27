@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:ejara/api/api.dart';
+import 'package:ejara/api/responses/register_response.dart';
 import 'package:ejara/models/user.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RegisterFailure implements Exception {}
+class RegisterFailure implements Exception {
+  String reason;
+  int statusCode;
+
+  RegisterFailure(this.reason, this.statusCode);
+}
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
@@ -41,24 +48,40 @@ class AuthenticationRepository {
     ;
   }
 
-  Future<void> register({ 
+  Future<RegisterResponse?> register({ 
     required String username, 
     required String email, 
     required String phoneNumber,
     required String country
   }) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-  
+
+    RegisterResponse response;
     try {
-      final response = await _api.register(username, email, phoneNumber, country);
+      response = await _api.register(username, email, phoneNumber, country);
+      print('Response -- $response');
       
-      prefs.setString(userCacheKey, json.encode(response));
-      _controller.add(AuthenticationStatus.authenticated);
+      return response;
+      // prefs.setString(userCacheKey, json.encode(response));
+      // _controller.add(AuthenticationStatus.authenticated);
     } on Exception catch (e) {
       print('API Sign up throw execption');
       print(e);
-      throw RegisterFailure();
+      
+      switch (e.runtimeType) {
+        case DioError:
+          // Here's the sample to get the failed response error code and message
+          final res = (e as DioError).response;
+          print("Got error : ${res?.statusCode} -> ${res?.statusMessage}");
+          print(res?.data);
+          print(json.encode(res?.data));
+          Map<String, dynamic> dataMsg = json.decode(json.encode(res?.data));
+
+          throw new RegisterFailure(dataMsg["message"]!.toString(), res?.statusCode ?? 400);
+        default:
+      }
     }
+
   }
 
   Future<void> logout() async {

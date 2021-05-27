@@ -54,16 +54,25 @@ class RegisterCubit extends Cubit<RegisterState> {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      await _authenticationRepository.register(
+      final response = await _authenticationRepository.register(
         username: state.username.value,
         email: state.email.value,
         phoneNumber: state.phoneNumber.value,
-        country: ""
+        country: "CM"
       );
+      print('Response -- $response');
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on Exception catch (e) {
       print('RegisterFormSubmitted : throw exception \n $e');
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      String reason = '';
+      if (e is RegisterFailure) {
+        print("CUSTGOMER MESSAGE : ${e.reason}");
+        reason = e.reason;
+      }
+      emit(state.copyWith(
+        status: FormzStatus.submissionFailure,
+        errorReason: reason
+      ));
     }
   }
 }

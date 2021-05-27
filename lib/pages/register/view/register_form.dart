@@ -23,6 +23,7 @@ class RegisterForm extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 32.0),
         child: Column(
           children: [
+            _FormError(),
             _buildBody(),
           ],
         )
@@ -49,6 +50,35 @@ class RegisterForm extends StatelessWidget {
     );
   }
   
+}
+
+class _FormError extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegisterCubit, RegisterState>(
+      buildWhen: (previous, current) => (previous.errorReason != current.errorReason),
+      builder: (context, state) {
+        return state.status == FormzStatus.submissionFailure
+          ? Container(
+              padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                
+                borderRadius: BorderRadius.all(Radius.circular(40.0))
+              ),
+              child: Center(
+                child: Text(
+                  "${state.errorReason}",
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                ),
+              ),
+            )
+          : Container();
+      }
+    );
+  }
 }
 
 class _UsernameInput extends StatelessWidget {

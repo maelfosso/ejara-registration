@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:ejara/api/responses/register_ok.dart';
+import 'package:ejara/api/responses/register_response.dart';
 import 'package:retrofit/http.dart';
 
 part 'api.g.dart';
@@ -23,7 +23,7 @@ abstract class RestClient {
   factory RestClient(Dio dio, { String baseUrl }) = _RestClient;
 
   @POST(APIs.register)
-  Future<RegisterOKResponse> register(
+  Future<RegisterResponse> register(
     @Field() String username,
     @Field("email_address") String email,
     @Field("phone_number") String phoneNumber,
