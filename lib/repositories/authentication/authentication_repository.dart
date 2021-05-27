@@ -1,40 +1,28 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:ejara/api/api.dart';
 import 'package:ejara/models/user.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SignUpFailure implements Exception {}
+class RegisterFailure implements Exception {}
 
-class SignInFailure implements Exception {}
-
-class SignCodeFailure implements Exception {}
-
-class SignOutFailure implements Exception {}
-
-enum AuthenticationStatus { unknown, known, authenticated, unauthenticated }
+enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
 
   AuthenticationRepository({
     RestClient? api
-  }) :  _cache = cache ?? CacheClient(),
-        _api = api ?? APIs.getRestClient() ;
+  }) :  _api = api ?? APIs.getRestClient() ;
 
-  final CacheClient _cache;
   final RestClient _api;
 
   @visibleForTesting
   static const userCacheKey = '__user_cache_key__';
-
-  @visibleForTesting
-  static const tokenCacheKey = '__token_cache_key__';
-
-  @visibleForTesting
-  static const userCodeCacheKey = '__user_code_cache_key__';
   
   Stream<AuthenticationStatus> get status async* {
-    await Future<void>.delayed(const Duration(seconds: 1));
     yield AuthenticationStatus.unauthenticated;
     yield* _controller.stream;
   }
@@ -43,94 +31,33 @@ class AuthenticationRepository {
     return User.empty;
   }
 
-  User get currentUser {
-    return _cache.read<User>(key: userCacheKey) ?? User.empty;
+  Future<User> get currentUser async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final res = prefs.getString(userCacheKey);
+
+    return res == null
+      ? User.empty
+      : User.fromJson(json.decode(res))
+    ;
   }
 
-  // UserCode get currentKnowUser {
-  //   return _cache.read<UserCode>(key: userCodeCacheKey)!;
-  // }
-
-  Future<void> register({ required String username, required String email, required String phoneNumber }) async {
-    UserCode userCode;
-    print('API signUpCustomer: $name - $phone');
+  Future<void> register({ 
+    required String username, 
+    required String email, 
+    required String phoneNumber,
+    required String country
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+  
     try {
-      userCode = await _api.SignUpClient(name, phone);
-      _cache.write<UserCode>(key: userCodeCacheKey, value: userCode);
-      _controller.add(AuthenticationStatus.known);
+      final response = await _api.register(username, email, phoneNumber, country);
+      
+      prefs.setString(userCacheKey, json.encode(response));
+      _controller.add(AuthenticationStatus.authenticated);
     } on Exception catch (e) {
       print('API Sign up throw execption');
       print(e);
-      throw SignUpFailure();
+      throw RegisterFailure();
     }
-
-    return userCode;
   }
-
-  // Future<UserCode> signUpDriver({ 
-  //   required String name, required String phone,
-  //   required String rcIdentificationNumber, required String residenceAddress, required String realResidenceAddress,
-  //   required Car car
-  // }) async {
-  //   UserCode userCode;
-  //   print('API signUpCustomer: $name - $phone');
-  //   try {
-  //     userCode = await _api.SignUpDriver(
-  //       name, phone,
-  //       rcIdentificationNumber, residenceAddress, realResidenceAddress,
-  //       car
-  //     );
-  //     _cache.write<UserCode>(key: userCodeCacheKey, value: userCode);
-  //     _controller.add(AuthenticationStatus.known);
-  //   } on Exception catch (e) {
-  //     print('API Sign up throw execption');
-  //     print(e);
-  //     throw SignUpFailure();
-  //   }
-
-  //   return userCode;
-  // }
-
-  // Future<UserCode> signIn({ required String phoneNumber }) async {
-  //   UserCode userCode;
-
-  //   try {
-  //     userCode = await _api.SignIn(phoneNumber);
-  //     _cache.write<UserCode>(key: userCodeCacheKey, value: userCode);
-  //     _controller.add(AuthenticationStatus.known);
-  //   } on Exception {
-  //     throw SignInFailure();
-  //   }
-
-  //   return userCode;
-  // }
-
-  // Future<UserToken> signCode({ required String phoneNumber, required String code }) async {
-  //   UserToken userToken;
-
-  //   try {
-  //     userToken = await _api.SignCode(phoneNumber, code);
-  //     _cache.write<User>(key: userCacheKey, value: userToken.user);
-  //     _cache.write<String>(key: tokenCacheKey, value: userToken.token);
-  //     print("signCode : $userToken");
-  //     _controller.add(AuthenticationStatus.authenticated);
-  //   } on Exception {
-  //     throw SignCodeFailure();
-  //   }
-
-  //   return userToken;
-  // }
-
-  // Future<void> signOut() async {
-  //   try {
-  //     _controller.add(AuthenticationStatus.unauthenticated);
-  //   } on Exception {
-  //     throw SignOutFailure();
-  //   }
-  // }
-
-  // void dispose() {
-  //   _controller.close();
-  // }
-
 }
