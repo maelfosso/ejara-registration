@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:ejara/pages/register/cubit/register_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -174,23 +175,90 @@ class _PhoneNumberInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegisterCubit, RegisterState>(
-      buildWhen: (previous, current) => previous.phoneNumber != current.phoneNumber,
+      // buildWhen: (previous, current) => previous.phoneNumber != current.phoneNumber,
       builder: (context, state) {
+        print("INIT STATE $state");
         return Container(
           margin: EdgeInsets.symmetric(vertical: 5.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: IntrinsicHeight(child: Row(
             children: [
-              TextField(
-                keyboardType: TextInputType.phone,
-                onChanged: (phoneNumber) => context.read<RegisterCubit>().phoneNumberChanged(phoneNumber),
-                decoration: InputDecoration(
-                  labelText: "Phone number"
+              Container(
+                child: CountryCodePicker(
+                  onChanged: (CountryCode code) {
+                    context.read<RegisterCubit>().countryChanged(code);
+                  },
+                  onInit: (CountryCode? code) {
+                    context.read<RegisterCubit>().countryChanged(code!);
+                  },
+                  padding: EdgeInsets.zero,
+                  initialSelection: 'CM',
+                  hideMainText: true,
+                  showFlagMain: true,
+                  showDropDownButton: true,
+                )
+              ),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.grey),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 5.0, bottom: 12.0),
+                        child: Text(
+                          "${state.country.name}",
+                          style: TextStyle(
+                            fontSize: 17.0
+                          ),
+                        ),
+                      ),
+                      Expanded( 
+                        child: Container(
+                        child: TextField(
+                          keyboardType: TextInputType.phone,
+                          onChanged: (phoneNumber) => context.read<RegisterCubit>().phoneNumberChanged(phoneNumber),
+                          decoration: InputDecoration(
+                            labelText: "Phone number",
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                          ),
+                        )
+                      )
+                    )
+                    ],
+                  )
                 ),
               )
+              // Expanded(
+              //   flex: 2,
+              //   child: Container(
+              //     child: TextField(
+              //       keyboardType: TextInputType.phone,
+              //       onChanged: (phoneNumber) => context.read<RegisterCubit>().phoneNumberChanged(phoneNumber),
+              //       decoration: InputDecoration(
+              //         labelText: "Phone number",
+              //         prefixText: "${state.country.name}",
+              //         border: InputBorder.none,
+              //         focusedBorder: InputBorder.none,
+              //         enabledBorder: InputBorder.none,
+              //         errorBorder: InputBorder.none,
+              //         disabledBorder: InputBorder.none,
+              //       ),
+              //     )
+              //   )
+              // )
             ]
           ),
+          )
         );
       },
     );

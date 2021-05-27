@@ -1,14 +1,15 @@
+import 'package:country_code_picker/country_code.dart';
 import 'package:equatable/equatable.dart';
 
 class Country extends Equatable {
 
   const Country({
-    this.name,
-    this.code
+    this.name = '',
+    this.code = ''
   });
   
-  final String? name;
-  final String? code;
+  final String name;
+  final String code;
 
   static const empty = Country(name: '', code: '');
 
@@ -23,6 +24,13 @@ class Country extends Equatable {
     return Country(
       name: json['name'],
       code: json['code']
+    );
+  }
+
+  factory Country.fromCountryCode(CountryCode countryCode) {
+    return Country(
+      name: countryCode.dialCode!,
+      code: countryCode.code!
     );
   }
   

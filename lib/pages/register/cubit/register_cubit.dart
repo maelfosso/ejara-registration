@@ -1,4 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:country_code_picker/country_code.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:ejara/models/country.dart';
 import 'package:ejara/pages/fields/email.dart';
 import 'package:ejara/pages/fields/phone_number.dart';
 import 'package:ejara/pages/fields/username.dart';
@@ -48,6 +51,14 @@ class RegisterCubit extends Cubit<RegisterState> {
     ));
   }
 
+  void countryChanged(CountryCode countryCode) {
+    print("COUNTRY CAHNANGED ${countryCode.code} - ${countryCode.dialCode} - ${countryCode.flagUri} - ${countryCode.name}");
+    print(Country.fromCountryCode(countryCode));
+    emit(state.copyWith(
+      country: Country.fromCountryCode(countryCode))
+    );
+  }
+
   Future<void> registerFormSubmitted() async {
     print('RegisterSubmitted : ${state.username.value} - ${state.phoneNumber.value}');
     print('RegisterFormStatus : ${state.status.isValid}');
@@ -58,7 +69,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         username: state.username.value,
         email: state.email.value,
         phoneNumber: state.phoneNumber.value,
-        country: "CM"
+        country: state.country.code!,
       );
       print('Response -- $response');
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
