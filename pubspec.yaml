@@ -34,6 +34,7 @@ dependencies:
   formz: ^0.4.0
   retrofit: any
   logger: any  #for logging purpose
+  country_code_picker: ^2.0.1
 
 dependency_overrides:
   retrofit_generator:

@@ -43,7 +43,8 @@ class RegisterForm extends StatelessWidget {
           alignment: Alignment(1.0, -1.0)
         ),
       ),
-      child: Column(
+      child: SingleChildScrollView(    // new line
+          child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -64,6 +65,7 @@ class RegisterForm extends StatelessWidget {
           )
         ],
       ),
+      )
     );
   }
 
